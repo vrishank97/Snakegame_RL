@@ -54,6 +54,7 @@ class SnakeEnv:
         snake = self.snake
         head = snake[0]
         self.done = 0
+        skore = len(snake)
         if action == 0:
             # collision with wall
             if state[head[0]][head[1]-1] == 3:
@@ -125,5 +126,5 @@ class SnakeEnv:
                 state[snake[-1][0]][snake[-1][1]] = 0
                 snake.pop()
         self.render()
-        self.score = (len(snake) - 6)*20
+        self.score = (len(snake) - skore)*10
         return state, self.score, self.done

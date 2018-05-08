@@ -8,9 +8,7 @@ env = SnakeEnv(10,15)
 agent = DQNAgent()
 
 episodes = 10000
-
 for e in range(episodes):
-        # reset state in the beginning of each game
         state = env.reset()
         for time_t in range(500):
             action = agent.act(env.state.reshape(1, 1, 10, 15))
@@ -19,12 +17,13 @@ for e in range(episodes):
             agent.remember(state, action, reward, next_state, done)
             # make next_state the new current state for the next frame.
             state = next_state
+            if e%100 == 0:
+                print(env.state)
             # done becomes True when the game ends
-            # ex) The agent drops the pole
             if env.done:
                 # print the score and break out of the loop
-                print("episode: {}/{}, score: {}"
-                      .format(e, episodes, env.score))
+                print("episode: {}/{}, score: {}, time: {}"
+                      .format(e, episodes, len(env.snake)-6, time_t))
                 break
         # train the agent with the experience of the episode
         if e>20:
