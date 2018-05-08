@@ -15,6 +15,10 @@ class SnakeEnv:
         self.done = 0
         self.reset()
         self.food()
+        self.food()
+        self.food()
+        self.food()
+        self.food()
 
     def food(self):
         a = randint(0, self.x-1)
@@ -34,6 +38,10 @@ class SnakeEnv:
         for i in range(self.x):
             self.state[i][0] = 3
             self.state[i][self.y - 1] = 3
+        self.food()
+        self.food()
+        self.food()
+        self.food()
         self.food()
         return self.state
 
@@ -117,5 +125,5 @@ class SnakeEnv:
                 state[snake[-1][0]][snake[-1][1]] = 0
                 snake.pop()
         self.render()
-        self.score = len(snake) - 6
+        self.score = (len(snake) - 6)*20
         return state, self.score, self.done

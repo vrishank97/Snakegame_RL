@@ -9,11 +9,8 @@ def LightCNN():
 	model.add(Conv2D(32, (5, 5), input_shape=(1, 10, 15), activation='relu'))
 	model.add(MaxPooling2D(pool_size=(2, 2)))
 	model.add(Dropout(0.2))
-	model.add(Conv2D(16, (3, 3), activation='relu'))
-	model.add(MaxPooling2D(pool_size=(2, 2)))
-	model.add(Dropout(0.2))
 	model.add(Flatten())
-	model.add(Dense(128, activation='relu'))
+	model.add(Dense(50, activation='relu'))
 	model.add(Dense(50, activation='relu'))
 	model.add(Dense(num_classes, activation='softmax'))
 
