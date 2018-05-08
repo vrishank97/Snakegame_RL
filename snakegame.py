@@ -12,7 +12,7 @@ class SnakeEnv:
         self.reward_range = (0, 1)
         self.snake = deque([[5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [5, 10]])
         self.score = 0
-        self.gameover = 0
+        self.done = 0
         self.reset()
         self.food()
 
@@ -34,6 +34,8 @@ class SnakeEnv:
         for i in range(self.x):
             self.state[i][0] = 3
             self.state[i][self.y - 1] = 3
+        self.food()
+        return self.state
 
     def render(self):
         for i in self.snake:
@@ -43,18 +45,18 @@ class SnakeEnv:
         state = self.state
         snake = self.snake
         head = snake[0]
-        self.gameover = 0
+        self.done = 0
         if action == 0:
             # collision with wall
             if state[head[0]][head[1]-1] == 3:
-                self.gameover = 1
+                self.done = 1
             # food
             if state[head[0]][head[1]-1] == 2:
                 snake.appendleft([head[0], head[1]-1])
                 self.food()
             # collision with self
             if state[head[0]][head[1]-1] == 1:
-                self.gameover = 1
+                self.done = 1
             # no obstruction
             if state[head[0]][head[1]-1] == 0:
                 snake.appendleft([head[0], head[1]-1])
@@ -65,14 +67,14 @@ class SnakeEnv:
         if action == 1:
             # collision with wall
             if state[head[0]-1][head[1]] == 3:
-                self.gameover = 1
+                self.done = 1
             # food
             if state[head[0]-1][head[1]] == 2:
                 snake.appendleft([head[0]-1, head[1]])
                 self.food()
             # collision with self
             if state[head[0]-1][head[1]] == 1:
-                self.gameover = 1
+                self.done = 1
             # no obstruction
             if state[head[0]-1][head[1]] == 0:
                 snake.appendleft([head[0]-1, head[1]])
@@ -83,14 +85,14 @@ class SnakeEnv:
         if action == 2:
             # collision with wall
             if state[head[0]][head[1]+1] == 3:
-                self.gameover = 1
+                self.done = 1
             # food
             if state[head[0]][head[1]+1] == 2:
                 snake.appendleft([head[0], head[1]+1])
                 self.food()
             # collision with self
             if state[head[0]][head[1]+1] == 1:
-                self.gameover = 1
+                self.done = 1
             # no obstruction
             if state[head[0]][head[1]+1] == 0:
                 snake.appendleft([head[0], head[1]+1])
@@ -101,14 +103,14 @@ class SnakeEnv:
         if action == 3:
             # collision with wall
             if state[head[0]+1][head[1]] == 3:
-                self.gameover = 1
+                self.done = 1
             # food
             if state[head[0]+1][head[1]] == 2:
                 snake.appendleft([head[0]+1, head[1]])
                 self.food()
             # collision with self
             if state[head[0]+1][head[1]] == 1:
-                self.gameover = 1
+                self.done = 1
             # no obstruction
             if state[head[0]+1][head[1]] == 0:
                 snake.appendleft([head[0]+1, head[1]])
@@ -116,4 +118,4 @@ class SnakeEnv:
                 snake.pop()
         self.render()
         self.score = len(snake) - 6
-        return state, self.score, self.gameover
+        return state, self.score, self.done
