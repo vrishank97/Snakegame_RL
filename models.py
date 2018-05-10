@@ -12,7 +12,6 @@ def LightCNN():
 	model.add(Flatten())
 	model.add(Dense(50, activation='relu'))
 	model.add(Dense(50, activation='relu'))
-	model.add(Dense(num_classes, activation='softmax'))
 
 	model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
 

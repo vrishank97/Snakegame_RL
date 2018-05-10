@@ -3,28 +3,32 @@ from DQNAgent import DQNAgent
 from snakegame import SnakeEnv
 import numpy as np
 
-
-env = SnakeEnv(10,15)
+env = SnakeEnv(10,10)
 agent = DQNAgent()
 
-episodes = 10000
+episodes = 30000
 for e in range(episodes):
         state = env.reset()
         for time_t in range(500):
-            action = agent.act(env.state.reshape(1, 1, 10, 15))
+
+            action = agent.act(env.state)
             next_state, reward, done = env.step(action)
-            # Remember the previous state, action, reward, and done
+
             agent.remember(state, action, reward, next_state, done)
             # make next_state the new current state for the next frame.
             state = next_state
-            if e%100 == 0:
-                print(env.state)
             # done becomes True when the game ends
             if env.done:
                 # print the score and break out of the loop
-                print("episode: {}/{}, score: {}, time: {}"
-                      .format(e, episodes, len(env.snake)-6, time_t))
+                print("episode: {}/{}, score: {}, time: {}, epsilon: {}"
+                      .format(e, episodes, len(env.snake)-3, time_t, agent.epsilon))
                 break
+            if e%10 == 0:
+                print(state)
+                print(agent.model.predict(state.reshape(1, 1, 10, 10)))
+
+            if e%1000 == 0:
+                agent.epsilon = 1.0
         # train the agent with the experience of the episode
-        if e>20:
-            agent.replay(32)
+        
+        agent.replay(min(32, len(agent.memory)))
