@@ -55,7 +55,7 @@ class DQNAgent:
               # predict the future discounted reward
               target = reward + self.gamma * np.amax(self.model.predict(next_state.reshape(1, 1, 10, 10))[0])
             #print (np.amax(self.model.predict(next_state.reshape(1, 1, 10, 10))[0]))
-            if reward != 0:
+            if done != 0:
                 target = reward
             target_f = self.model.predict(state.reshape(1, 1, 10, 10))
             target_f[0][action] = target

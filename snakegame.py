@@ -53,7 +53,41 @@ class SnakeEnv:
         head = self.snake[0]
         self.state[head[0]][head[1]] = HEAD
 
+    def getDirection():
+        snake = self.snake
+        head = snake[0]
+        neck = snake[1]
+
+        if head[1] - 1 == neck[1]:
+            # facing up
+            return 0
+        elif head[0] - 1 == neck[0]:
+            # facing right
+            return 1
+        elif head[1] + 1 == neck[1]:
+            # facing down
+            return 2
+        elif head[0] + 1 == neck[0]:
+            # facing left
+            return 3
+
+    def step_absolute(direction):
+        if direction == 0:
+            # screen up
+            return [head[0], head[1] + 1]
+        elif direction == 1:
+            # screen right
+            return [head[0] + 1, head[1]]
+        elif direction == 2:
+            # screen down
+            return [head[0], head[1] - 1]
+        else:
+            #screen left
+            return [head[0] - 1, head[1]] 
+
     def step(self, action):
+        #relative 
+
         state = self.state
         snake = self.snake
         head = snake[0]
@@ -61,22 +95,38 @@ class SnakeEnv:
         skore = len(snake)
         next_move = [0,0]
 
+        neck_pos = self.getDirection()
+
         # Left
         if action == 0:
-            next_move[0] = head[0]
-            next_move[1] = head[1]-1
+            if neck_pos == 0:
+                next_move = step_absolute(3)
+            elif neck_pos == 1:
+                next_move = step_absolute(0)
+            elif neck_pos == 2:
+                next_move = step_absolute(1)
+            else:
+                next_move = step_absolute(2)
         # Up
         if action == 1:
-            next_move[0] = head[0]-1
-            next_move[1] = head[1]
+            if neck_pos == 0:
+                next_move = step_absolute(0)
+            elif neck_pos == 1:
+                next_move = step_absolute(1)
+            elif neck_pos == 2:
+                next_move = step_absolute(2)
+            else:
+                next_move = step_absolute(3)
         # Right
         if action == 2:
-            next_move[0] = head[0]
-            next_move[1] = head[1]+1
-        # Down
-        if action == 3:
-            next_move[0] = head[0]+1
-            next_move[1] = head[1]
+            if neck_pos == 0:
+                next_move = step_absolute(1)
+            elif neck_pos == 1:
+                next_move = step_absolute(2)
+            elif neck_pos == 2:
+                next_move = step_absolute(3)
+            else:
+                next_move = step_absolute(0)
 
         # collision with wall
         if state[next_move[0]][next_move[1]] == WALL:
