@@ -25,15 +25,13 @@ class DQNAgent:
     def _build_model(self):
 
         model = Sequential()
-        model.add(Conv2D(16, (5, 5), activation='relu', input_shape=(1, 10, 10), dim_ordering="th"))        
+        model.add(Dense(32, input_shape=(1, 10, 10), activation='relu'))
         model.add(Dropout(0.3))
-        model.add(Flatten())
-
         model.add(Dense(32, activation='relu'))
         model.add(Dropout(0.3))
         model.add(Dense(4, activation='linear'))
         model.summary()
-        model.compile(RMSprop(), 'MSE')
+        model.compile(Adam(), 'MSE')
 
         return model
 

@@ -23,7 +23,7 @@ for e in range(episodes):
                 print("episode: {}/{}, score: {}, time: {}, epsilon: {}"
                       .format(e, episodes, len(env.snake)-3, time_t, agent.epsilon))
                 break
-            if e%10 == 0:
+            if e%50 == 0:
                 print(state)
                 print(agent.model.predict(state.reshape(1, 1, 10, 10)))
 
@@ -31,4 +31,4 @@ for e in range(episodes):
                 agent.epsilon = 1.0
         # train the agent with the experience of the episode
         
-        agent.replay(min(32, len(agent.memory)))
+        agent.replay(min(100, len(agent.memory)))

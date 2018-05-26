@@ -53,7 +53,7 @@ class SnakeEnv:
         head = self.snake[0]
         self.state[head[0]][head[1]] = HEAD
 
-    def getDirection():
+    def getDirection(self):
         snake = self.snake
         head = snake[0]
         neck = snake[1]
@@ -71,7 +71,9 @@ class SnakeEnv:
             # facing left
             return 3
 
-    def step_absolute(direction):
+    def step_absolute(self, direction):
+        head = self.snake[0]
+
         if direction == 0:
             # screen up
             return [head[0], head[1] + 1]
@@ -100,33 +102,33 @@ class SnakeEnv:
         # Left
         if action == 0:
             if neck_pos == 0:
-                next_move = step_absolute(3)
+                next_move = self.step_absolute(3)
             elif neck_pos == 1:
-                next_move = step_absolute(0)
+                next_move = self.step_absolute(0)
             elif neck_pos == 2:
-                next_move = step_absolute(1)
+                next_move = self.step_absolute(1)
             else:
-                next_move = step_absolute(2)
+                next_move = self.step_absolute(2)
         # Up
         if action == 1:
             if neck_pos == 0:
-                next_move = step_absolute(0)
+                next_move = self.step_absolute(0)
             elif neck_pos == 1:
-                next_move = step_absolute(1)
+                next_move = self.step_absolute(1)
             elif neck_pos == 2:
-                next_move = step_absolute(2)
+                next_move = self.step_absolute(2)
             else:
-                next_move = step_absolute(3)
+                next_move = self.step_absolute(3)
         # Right
         if action == 2:
             if neck_pos == 0:
-                next_move = step_absolute(1)
+                next_move = self.step_absolute(1)
             elif neck_pos == 1:
-                next_move = step_absolute(2)
+                next_move = self.step_absolute(2)
             elif neck_pos == 2:
-                next_move = step_absolute(3)
+                next_move = self.step_absolute(3)
             else:
-                next_move = step_absolute(0)
+                next_move = self.step_absolute(0)
 
         # collision with wall
         if state[next_move[0]][next_move[1]] == WALL:
