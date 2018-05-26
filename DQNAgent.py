@@ -25,9 +25,9 @@ class DQNAgent:
     def _build_model(self):
         state = Input(shape=(1, 10, 10))
         x = Flatten()(state)
-        x = Dense(32, activation='relu')(x)
-        x = Dense(32, activation='relu')(x)
-        x = Dense(32, activation='relu')(x)
+        x = Dense(128, activation='relu')(x)
+        x = Dense(128, activation='relu')(x)
+        x = Dense(128, activation='relu')(x)
         y = Dense(3, activation='linear')(x)        
         model = Model(state, y)
         '''
