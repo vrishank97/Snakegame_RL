@@ -14,7 +14,7 @@ from keras.models import Model, Sequential
 class DQNAgent:
     def __init__(self):
         self.action_size = 3
-        self.memory = deque(maxlen=105)
+        self.memory = deque(maxlen=100)
         self.gamma = 0.95    # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.075
@@ -23,26 +23,18 @@ class DQNAgent:
         self.model = self._build_model()
 
     def _build_model(self):
-        state = Input(shape=(1, 10, 10))
-        x = Flatten()(state)
-        x = Dense(128, activation='relu')(x)
-        x = Dense(128, activation='relu')(x)
-        x = Dense(128, activation='relu')(x)
-        y = Dense(3, activation='linear')(x)        
-        model = Model(state, y)
-        '''
         model = Sequential()
-
-        model.add(Dense(32, input_shape=(1, 10, 10), activation='relu'))
-        model.add(Dropout(0.3))
+        model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(1, 10, 10), dim_ordering="th"))    
+        #model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Dropout(0.2))
+        model.add(Conv2D(32, (3, 3), activation='relu', dim_ordering="th"))  
         model.add(Flatten())
-        model.add(Dense(32, activation='relu'))
-        model.add(Dropout(0.3))
-        model.add(Dense(4, activation='linear'))
-        '''
+        model.add(Dense(50, activation='relu'))
+        model.add(Dense(50, activation='relu'))
+        model.add(Dense(3, activation='linear'))
+        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
         model.summary()
-        model.compile(Adam(), 'MSE')
-
+        
         return model
 
     def remember(self, state, action, reward, next_state, done):
@@ -55,16 +47,19 @@ class DQNAgent:
         return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
-
+        '''
         minibatch=random.sample(self.memory, batch_size)
         for state, action, reward, next_state, done in minibatch:
-            target = reward
-            if not done:
-              # predict the future discounted reward
-              target = reward + self.gamma * np.amax(self.model.predict(next_state.reshape(1, 1, 10, 10))[0])
-            #print (np.amax(self.model.predict(next_state.reshape(1, 1, 10, 10))[0]))
-            if done != 0:
+            memory = deque(maxlen=batch_size)
+            memory.append((state, action, reward, next_state, done))
+        '''
+        mem = self.memory.reverse()
+        for state, action, reward, next_state, done in self.memory:
+            if reward != 0 or done==1:
                 target = reward
+            else:
+                target*=self.gamma
+
             target_f = self.model.predict(state.reshape(1, 1, 10, 10))
             target_f[0][action] = target
             self.model.fit(state.reshape(1, 1, 10, 10), target_f, epochs=1, verbose=0)

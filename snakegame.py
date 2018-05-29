@@ -1,6 +1,7 @@
 import numpy as np
 from random import randint
 from collections import deque
+import copy
 
 FOOD = 10
 SNAKE = 7
@@ -44,6 +45,9 @@ class SnakeEnv:
         for i in range(self.x):
             self.state[i][0] = WALL
             self.state[i][self.y - 1] = WALL
+        self.food()
+        self.food()
+        self.food()
         self.food()
         return self.state
 
@@ -151,3 +155,7 @@ class SnakeEnv:
         if self.done:
             self.score = 0
         return state, self.score, self.done
+
+    def getCurrentState(self):
+        state = copy.deepcopy(self.state)
+        return state
