@@ -19,7 +19,19 @@ class SnakeEnv:
         self.snake = deque([[5, 4],[5, 5],[5, 6]])
         self.score = 0
         self.done = 0
+        self.screen = np.ones((x*4, y*4), dtype=int)*GROUND
         self.reset()
+
+    def project(self):
+        state = self.state
+        screen = self.screen
+        for i in range(10):
+            for j in range(10):
+                screen[i*4][j*4] = state[i][j]
+                screen[i*4+1][j*4] = state[i][j]
+                screen[i*4][j*4+1] = state[i][j]
+                screen[i*4+1][j*4+1] = state[i][j]
+        return screen
 
     def food(self):
         a = randint(0, self.x-1)
@@ -49,7 +61,7 @@ class SnakeEnv:
         self.food()
         self.food()
         self.food()
-        return self.state
+        return self.project()
 
     def render(self):
         for i in self.snake:
@@ -154,8 +166,8 @@ class SnakeEnv:
         self.score = (len(snake) - skore)
         if self.done:
             self.score = 0
-        return state, self.score, self.done
+        return self.project(), self.score, self.done
 
     def getCurrentState(self):
-        state = copy.deepcopy(self.state)
+        state = copy.deepcopy(self.project())
         return state

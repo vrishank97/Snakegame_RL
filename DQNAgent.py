@@ -24,7 +24,7 @@ class DQNAgent:
 
     def _build_model(self):
         model = Sequential()
-        model.add(Conv2D(16, (5, 5), activation='relu', input_shape=(1, 10, 10), dim_ordering="th"))    
+        model.add(Conv2D(16, (5, 5), activation='relu', input_shape=(1, 40, 40), dim_ordering="th"))    
         #model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Dropout(0.2))
         model.add(Conv2D(16, (3, 3), activation='relu', dim_ordering="th"))  
@@ -45,7 +45,7 @@ class DQNAgent:
     def act(self, state):
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)
-        act_values=self.model.predict(state.reshape(1, 1, 10, 10))
+        act_values=self.model.predict(state.reshape(1, 1, 40, 40))
         return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
@@ -63,9 +63,9 @@ class DQNAgent:
             else:
                 target*=self.gamma
 
-            target_f = self.model.predict(state.reshape(1, 1, 10, 10))
+            target_f = self.model.predict(state.reshape(1, 1, 40, 40))
             target_f[0][action] = target
-            self.model.fit(state.reshape(1, 1, 10, 10), target_f, epochs=1, verbose=0)
+            self.model.fit(state.reshape(1, 1, 40, 40), target_f, epochs=1, verbose=0)
 
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay

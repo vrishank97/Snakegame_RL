@@ -11,9 +11,9 @@ for e in range(episodes):
         state = env.reset()
         for time_t in range(150):
             state = env.getCurrentState()
-            action = agent.act(env.state)
+            action = agent.act(env.project())
             next_state, reward, done = env.step(action)
-            next_state = env.state
+            next_state = env.project()
             #print("Step: {}", time_t)
             #print(state, next_state)
             agent.remember(state, action, reward, next_state, done)
@@ -22,7 +22,7 @@ for e in range(episodes):
             # done becomes True when the game ends
             if e%50 == 0:
                 print(state)
-                print(agent.model.predict(state.reshape(1, 1, 10, 10)))
+                #print(agent.model.predict(env.project().reshape(1, 1, 40, 40)))
 
             if env.done:
                 # print the score and break out of the loop
