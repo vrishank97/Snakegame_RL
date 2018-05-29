@@ -9,7 +9,7 @@ agent = DQNAgent()
 episodes = 1000
 for e in range(episodes):
         state = env.reset()
-        for time_t in range(500):
+        for time_t in range(150):
             state = env.getCurrentState()
             action = agent.act(env.state)
             next_state, reward, done = env.step(action)
