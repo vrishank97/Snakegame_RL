@@ -25,12 +25,13 @@ class DQNAgent:
     def _build_model(self):
         model = Sequential()
         model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(1, 10, 10), dim_ordering="th"))    
-        #model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Dropout(0.2))
         model.add(Conv2D(32, (3, 3), activation='relu', dim_ordering="th"))  
+        model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Flatten())
-        model.add(Dense(50, activation='relu'))
-        model.add(Dense(50, activation='relu'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(64, activation='relu'))
         model.add(Dense(3, activation='linear'))
         model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
         model.summary()
@@ -55,6 +56,7 @@ class DQNAgent:
         '''
         mem = self.memory.reverse()
         for state, action, reward, next_state, done in self.memory:
+            target=0
             if reward != 0 or done==1:
                 target = reward
             else:
