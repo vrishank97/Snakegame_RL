@@ -161,7 +161,7 @@ class SnakeEnv:
             snake.pop()
 
         self.render()
-        self.score = (len(snake) - skore)
+        self.score = (len(snake) - 3)
         if self.done:
             self.score = 0
         return self.project(), self.score, self.done
