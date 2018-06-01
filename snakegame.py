@@ -163,7 +163,7 @@ class SnakeEnv:
         self.render()
         self.score = (len(snake) - 3)
         if self.done:
-            self.score = 0
+            self.score = -1
         return self.project(), self.score, self.done
 
     def getCurrentState(self):
