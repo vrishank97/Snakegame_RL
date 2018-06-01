@@ -49,19 +49,12 @@ class DQNAgent:
         return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
-        '''
         minibatch=random.sample(self.memory, batch_size)
         for state, action, reward, next_state, done in minibatch:
-            memory = deque(maxlen=batch_size)
-            memory.append((state, action, reward, next_state, done))
-        '''
-        mem = self.memory.reverse()
-        for state, action, reward, next_state, done in self.memory:
-            target=0
-            if reward != 0 or done==1:
-                target = reward
-            else:
-                target*=self.gamma
+            target = reward
+            if not done:
+              target = reward + self.gamma * \
+                       np.amax(self.model.predict(next_state.reshape(1, 1, 40, 40))[0])
 
             target_f = self.model.predict(state.reshape(1, 1, 40, 40))
             target_f[0][action] = target

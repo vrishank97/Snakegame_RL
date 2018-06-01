@@ -59,8 +59,6 @@ class SnakeEnv:
             self.state[i][self.y - 1] = WALL
         self.food()
         self.food()
-        self.food()
-        self.food()
         return self.project()
 
     def render(self):

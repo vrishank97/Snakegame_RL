@@ -21,8 +21,7 @@ for e in range(episodes):
             state = next_state
             # done becomes True when the game ends
             if e%50 == 0:
-                print(state)
-                #print(agent.model.predict(env.project().reshape(1, 1, 40, 40)))
+                print(agent.model.predict(env.project().reshape(1, 1, 40, 40)))
 
             if env.done:
                 # print the score and break out of the loop
