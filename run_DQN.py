@@ -9,7 +9,7 @@ agent = DQNAgent()
 episodes = 1000
 for e in range(episodes):
         state = env.reset()
-        for time_t in range(150):
+        for time_t in range(400):
             state = env.getCurrentState()
             action = agent.act(env.project())
             next_state, reward, done = env.step(action)
@@ -30,4 +30,4 @@ for e in range(episodes):
                 break
         # train the agent with the experience of the episode
         
-        agent.replay(min(100, len(agent.memory)))
+        agent.replay(min(128, len(agent.memory)))
