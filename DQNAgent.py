@@ -19,12 +19,12 @@ class DQNAgent:
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.075
         self.EPSILON_DECAY = 0.00000185
-        self.learning_rate = 0.001
+        self.learning_rate = 0.1
         self.model = self._build_model()
 
     def _build_model(self):
         model = Sequential()
-        model.add(Conv2D(16, (5, 5), activation='relu', input_shape=(1, 10, 10), dim_ordering="th"))    
+        model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(1, 8, 8), dim_ordering="th"))    
         #model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Dropout(0.2))
         model.add(Conv2D(32, (3, 3), activation='relu', dim_ordering="th"))
@@ -44,7 +44,7 @@ class DQNAgent:
     def act(self, state):
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)
-        act_values=self.model.predict(state.reshape(1, 1, 10, 10))
+        act_values=self.model.predict(state.reshape(1, 1, 8, 8))
         return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
@@ -56,11 +56,11 @@ class DQNAgent:
             target = reward
             if not done:
               target = reward + self.gamma * \
-                       np.amax(self.model.predict(next_state.reshape(1, 1, 10, 10))[0])
+                       np.amax(self.model.predict(next_state.reshape(1, 1, 8, 8))[0])
 
-            target_f = self.model.predict(state.reshape(1, 1, 10, 10))
+            target_f = self.model.predict(state.reshape(1, 1, 8, 8))
             target_f[0][action] = target
-            X.append(state.reshape(1, 10, 10))
+            X.append(state.reshape(1, 8, 8))
             y.append(target_f[0])
 
         self.model.fit(np.array(X), np.array(y), epochs=1, verbose=0)

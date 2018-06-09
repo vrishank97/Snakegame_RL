@@ -16,7 +16,7 @@ class SnakeEnv:
         self.y = y
         self.state = np.ones((x, y), dtype=int)*GROUND
         self.reward_range = (0, 1)
-        self.snake = deque([[5, 4],[5, 5],[5, 6]])
+        self.snake = deque([[3, 3],[3, 4],[3, 5]])
         self.score = 0
         self.done = 0
         self.screen = np.ones((x*4, y*4), dtype=int)*GROUND
@@ -87,6 +87,7 @@ class SnakeEnv:
 
     def step_absolute(self, direction):
         head = self.snake[0]
+        last_pos = self.snake[1]
 
         if direction == 0:
             # screen up
@@ -112,6 +113,7 @@ class SnakeEnv:
         next_move = [0,0]
 
         neck_pos = self.getDirection()
+
 
         # Left
         if action == 0:
@@ -161,7 +163,7 @@ class SnakeEnv:
             snake.pop()
 
         self.render()
-        self.score = (len(snake) - 3)
+        self.score = (len(snake) - skore)
         if self.done:
             self.score = -1
         return self.state, self.score, self.done

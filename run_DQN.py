@@ -3,10 +3,10 @@ from DQNAgent import DQNAgent
 from snakegame import SnakeEnv
 import numpy as np
 
-env = SnakeEnv(10,10)
+env = SnakeEnv(8,8)
 agent = DQNAgent()
 
-episodes = 100000
+episodes = 500000
 for e in range(episodes):
         state = env.reset()
         for time_t in range(400):
@@ -21,7 +21,7 @@ for e in range(episodes):
             state = next_state
             # done becomes True when the game ends
             if e%50 == 0:
-                print(agent.model.predict(env.state.reshape(1, 1, 10, 10)))
+                print(agent.model.predict(env.state.reshape(1, 1, 8, 8)))
                 print(agent.memory[0])
 
             if env.done:
