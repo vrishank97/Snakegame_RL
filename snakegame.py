@@ -59,7 +59,7 @@ class SnakeEnv:
             self.state[i][self.y - 1] = WALL
         self.food()
         self.food()
-        return self.project()
+        return self.state
 
     def render(self):
         for i in self.snake:
@@ -164,8 +164,8 @@ class SnakeEnv:
         self.score = (len(snake) - 3)
         if self.done:
             self.score = -1
-        return self.project(), self.score, self.done
+        return self.state, self.score, self.done
 
     def getCurrentState(self):
-        state = copy.deepcopy(self.project())
+        state = copy.deepcopy(self.state)
         return state

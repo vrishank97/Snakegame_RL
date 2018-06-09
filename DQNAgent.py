@@ -24,10 +24,12 @@ class DQNAgent:
 
     def _build_model(self):
         model = Sequential()
-        model.add(Conv2D(16, (5, 5), activation='relu', input_shape=(1, 40, 40), dim_ordering="th"))    
+        model.add(Conv2D(16, (5, 5), activation='relu', input_shape=(1, 10, 10), dim_ordering="th"))    
         #model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Dropout(0.2))
-        model.add(Conv2D(16, (3, 3), activation='relu', dim_ordering="th"))
+        model.add(Conv2D(32, (3, 3), activation='relu', dim_ordering="th"))
+        model.add(Dropout(0.2))
+        model.add(Conv2D(64, (3, 3), activation='relu', dim_ordering="th"))
         model.add(Flatten())
         model.add(Dense(256, activation='relu'))
         model.add(Dense(3, activation='linear'))
@@ -42,7 +44,7 @@ class DQNAgent:
     def act(self, state):
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)
-        act_values=self.model.predict(state.reshape(1, 1, 40, 40))
+        act_values=self.model.predict(state.reshape(1, 1, 10, 10))
         return np.argmax(act_values[0])  # returns action
 
     def replay(self, batch_size):
@@ -54,14 +56,14 @@ class DQNAgent:
             target = reward
             if not done:
               target = reward + self.gamma * \
-                       np.amax(self.model.predict(next_state.reshape(1, 1, 40, 40))[0])
+                       np.amax(self.model.predict(next_state.reshape(1, 1, 10, 10))[0])
 
-            target_f = self.model.predict(state.reshape(1, 1, 40, 40))
+            target_f = self.model.predict(state.reshape(1, 1, 10, 10))
             target_f[0][action] = target
-            X.append(state.reshape(1, 40, 40))
+            X.append(state.reshape(1, 10, 10))
             y.append(target_f[0])
 
-        self.model.fit(np.array(X), np.array(y), epochs=5, verbose=0)
+        self.model.fit(np.array(X), np.array(y), epochs=3, verbose=0)
 
         if self.epsilon > self.epsilon_min:
             self.epsilon -= self.EPSILON_DECAY
