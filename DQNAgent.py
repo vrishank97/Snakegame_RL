@@ -19,7 +19,7 @@ class DQNAgent:
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.075
         self.EPSILON_DECAY = 0.00000185
-        self.learning_rate = 0.01
+        self.learning_rate = 0.001
         self.model = self._build_model()
 
     def _build_model(self):
@@ -33,7 +33,7 @@ class DQNAgent:
         model.add(Flatten())
         model.add(Dense(256, activation='relu'))
         model.add(Dense(3, activation='linear'))
-        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
+        model.compile(loss='mse', optimizer=RMSprop(lr=self.learning_rate, rho=0.9, epsilon=None, decay=0.0))
         model.summary()
         
         return model
@@ -63,7 +63,7 @@ class DQNAgent:
             X.append(state.reshape(1, 10, 10))
             y.append(target_f[0])
 
-        self.model.fit(np.array(X), np.array(y), epochs=3, verbose=0)
+        self.model.fit(np.array(X), np.array(y), epochs=1, verbose=0)
 
         if self.epsilon > self.epsilon_min:
             self.epsilon -= self.EPSILON_DECAY

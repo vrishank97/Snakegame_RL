@@ -6,7 +6,7 @@ import numpy as np
 env = SnakeEnv(10,10)
 agent = DQNAgent()
 
-episodes = 1000
+episodes = 100000
 for e in range(episodes):
         state = env.reset()
         for time_t in range(400):
@@ -31,4 +31,4 @@ for e in range(episodes):
                 break
         # train the agent with the experience of the episode
         
-        agent.replay(min(128, len(agent.memory)))
+        agent.replay(min(32, len(agent.memory)))
