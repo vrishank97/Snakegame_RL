@@ -98,7 +98,7 @@ class SnakeEnv:
         elif direction == 2:
             # screen down
             return [head[0], head[1] - 1]
-        else:
+        elif direction == 3:
             #screen left
             return [head[0] - 1, head[1]] 
 
@@ -111,9 +111,34 @@ class SnakeEnv:
         self.done = 0
         skore = len(snake)
         next_move = [0,0]
-
+        last_pos = self.snake[1]
         neck_pos = self.getDirection()
 
+        if action == 0:
+            if last_pos == self.step_absolute(0):
+                next_move = self.step_absolute(2)
+            else:
+                next_move = self.step_absolute(0)
+
+        if action == 1:
+            if last_pos == self.step_absolute(1):
+                next_move = self.step_absolute(3)
+            else:
+                next_move = self.step_absolute(1)
+
+        if action == 2:
+            if last_pos == self.step_absolute(2):
+                next_move = self.step_absolute(0)
+            else:
+                next_move = self.step_absolute(2)
+
+        if action == 3:
+            if last_pos == self.step_absolute(3):
+                next_move = self.step_absolute(1)
+            else:
+                next_move = self.step_absolute(3)
+
+        '''
 
         # Left
         if action == 0:
@@ -145,6 +170,8 @@ class SnakeEnv:
                 next_move = self.step_absolute(3)
             else:
                 next_move = self.step_absolute(0)
+
+        '''
 
         # collision with wall
         if state[next_move[0]][next_move[1]] == WALL:

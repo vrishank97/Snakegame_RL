@@ -1,5 +1,3 @@
-import tensorflow as tf
-from models import LightCNN
 from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPooling2D, Dropout, Flatten
@@ -13,26 +11,26 @@ from keras.models import Model, Sequential
 
 class DQNAgent:
     def __init__(self):
-        self.action_size = 3
+        self.action_size = 4
         self.memory = deque(maxlen=500)
         self.gamma = 0.95    # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.075
         self.EPSILON_DECAY = 0.00000185
-        self.learning_rate = 0.1
+        self.learning_rate = 0.01
         self.model = self._build_model()
 
     def _build_model(self):
         model = Sequential()
-        model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(1, 8, 8), dim_ordering="th"))    
+        model.add(Conv2D(16, (1, 1), activation='relu', input_shape=(1, 8, 8), data_format="channels_first"))    
         #model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Dropout(0.2))
-        model.add(Conv2D(32, (3, 3), activation='relu', dim_ordering="th"))
+        model.add(Conv2D(32, (2, 2), activation='relu', data_format="channels_first"))
         model.add(Dropout(0.2))
-        model.add(Conv2D(64, (3, 3), activation='relu', dim_ordering="th"))
+        model.add(Conv2D(32, (3, 3), activation='relu', data_format="channels_first"))
         model.add(Flatten())
-        model.add(Dense(256, activation='relu'))
-        model.add(Dense(3, activation='linear'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(4, activation='linear'))
         model.compile(loss='mse', optimizer=RMSprop(lr=self.learning_rate, rho=0.9, epsilon=None, decay=0.0))
         model.summary()
         

@@ -2,11 +2,15 @@ from collections import deque
 from DQNAgent import DQNAgent
 from snakegame import SnakeEnv
 import numpy as np
+import h5py
+import copy
 
 env = SnakeEnv(8,8)
 agent = DQNAgent()
-
 episodes = 500000
+avg_score=[]
+avg_time=[]
+
 for e in range(episodes):
         state = env.reset()
         for time_t in range(400):
@@ -20,15 +24,23 @@ for e in range(episodes):
             # make next_state the new current state for the next frame.
             state = next_state
             # done becomes True when the game ends
-            if e%50 == 0:
+            '''
+            if e%100 == 0:
                 print(agent.model.predict(env.state.reshape(1, 1, 8, 8)))
-                print(agent.memory[0])
-
+                print(agent.memory[0][0])
+            '''
             if env.done:
                 # print the score and break out of the loop
-                print("episode: {}/{}, score: {}, time: {}, epsilon: {}"
-                      .format(e, episodes, len(env.snake)-3, time_t, agent.epsilon))
+                avg_score.append(len(env.snake)-3)
+                avg_time.append(time_t)
                 break
         # train the agent with the experience of the episode
         
         agent.replay(min(32, len(agent.memory)))
+        if e%100==0:
+            print("episode: {}/{}, average score: {}, average time: {}, epsilon: {}"
+                      .format(e, episodes, np.array(avg_score).mean(), np.array(avg_time).mean(), agent.epsilon))
+            avg_score=[]
+            avg_time=[]
+
+agent.model.save("trained_model.h5")
