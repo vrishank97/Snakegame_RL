@@ -12,11 +12,11 @@ from keras.models import Model, Sequential
 class DQNAgent:
     def __init__(self):
         self.action_size = 4
-        self.memory = deque(maxlen=500)
+        self.memory = deque(maxlen=50000)
         self.gamma = 0.95    # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.075
-        self.EPSILON_DECAY = 0.00000185
+        self.EPSILON_DECAY = 0.0000185
         self.learning_rate = 0.01
         self.model = self._build_model()
 
