@@ -1,7 +1,7 @@
 from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPooling2D, Dropout, Flatten
-from keras.optimizers import Adam, RMSprop
+from keras.optimizers import Adam, RMSprop, SGD
 import numpy as np
 import random
 from keras.layers import Conv2D, MaxPooling2D, Flatten
@@ -16,7 +16,7 @@ class DQNAgent:
         self.gamma = 0.95    # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.075
-        self.EPSILON_DECAY = 0.0000185
+        self.EPSILON_DECAY = 0.000185
         self.learning_rate = 0.01
         self.model = self._build_model()
 
@@ -31,7 +31,7 @@ class DQNAgent:
         model.add(Flatten())
         model.add(Dense(64, activation='relu'))
         model.add(Dense(4, activation='linear'))
-        model.compile(loss='mse', optimizer=RMSprop(lr=self.learning_rate, rho=0.9, epsilon=None, decay=0.0))
+        model.compile(loss='mse', optimizer=SGD(lr=self.learning_rate))
         model.summary()
         
         return model

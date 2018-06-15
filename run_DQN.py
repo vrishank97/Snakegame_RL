@@ -4,13 +4,14 @@ from snakegame import SnakeEnv
 import numpy as np
 import h5py
 import copy
+import time
 
 env = SnakeEnv(8,8)
 agent = DQNAgent()
-episodes = 500000
+episodes = 10000
 avg_score=[]
 avg_time=[]
-
+tim = time.time()
 for e in range(episodes):
         state = env.reset()
         for time_t in range(400):
@@ -24,11 +25,11 @@ for e in range(episodes):
             # make next_state the new current state for the next frame.
             state = next_state
             # done becomes True when the game ends
-            '''
+            
             if e%100 == 0:
                 print(agent.model.predict(env.state.reshape(1, 1, 8, 8)))
                 print(agent.memory[0][0])
-            '''
+            
             if env.done:
                 # print the score and break out of the loop
                 avg_score.append(len(env.snake)-3)
@@ -42,5 +43,7 @@ for e in range(episodes):
                       .format(e, episodes, np.array(avg_score).mean(), np.array(avg_time).mean(), agent.epsilon))
             avg_score=[]
             avg_time=[]
+
+print(time.time()-tim)
 
 agent.model.save("trained_model.h5")
