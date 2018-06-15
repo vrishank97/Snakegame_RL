@@ -2,6 +2,7 @@ import numpy as np
 from random import randint
 from collections import deque
 import copy
+import warnings
 
 FOOD = 10
 SNAKE = 7
@@ -67,24 +68,6 @@ class SnakeEnv:
         head = self.snake[0]
         self.state[head[0]][head[1]] = HEAD
 
-    def getDirection(self):
-        snake = self.snake
-        head = snake[0]
-        neck = snake[1]
-
-        if head[1] - 1 == neck[1]:
-            # facing up
-            return 0
-        elif head[0] - 1 == neck[0]:
-            # facing right
-            return 1
-        elif head[1] + 1 == neck[1]:
-            # facing down
-            return 2
-        elif head[0] + 1 == neck[0]:
-            # facing left
-            return 3
-
     def step_absolute(self, direction):
         head = self.snake[0]
         last_pos = self.snake[1]
@@ -111,32 +94,58 @@ class SnakeEnv:
         self.done = 0
         skore = len(snake)
         next_move = [0,0]
-        last_pos = self.snake[1]
-        neck_pos = self.getDirection()
-
-        if action == 0:
-            if last_pos == self.step_absolute(0):
-                next_move = self.step_absolute(2)
-            else:
-                next_move = self.step_absolute(0)
+        neck_pos = snake[1]
 
         if action == 1:
-            if last_pos == self.step_absolute(1):
-                next_move = self.step_absolute(3)
-            else:
-                next_move = self.step_absolute(1)
-
-        if action == 2:
-            if last_pos == self.step_absolute(2):
-                next_move = self.step_absolute(0)
-            else:
+            # forward
+            if neck_pos == self.step_absolute(0):
                 next_move = self.step_absolute(2)
 
-        if action == 3:
-            if last_pos == self.step_absolute(3):
-                next_move = self.step_absolute(1)
-            else:
+            elif neck_pos == self.step_absolute(1):
                 next_move = self.step_absolute(3)
+
+            elif neck_pos == self.step_absolute(2):
+                next_move = self.step_absolute(0)
+            
+            elif neck_pos == self.step_absolute(3):
+                next_move = self.step_absolute(1)
+
+            else:
+                warnings.warn("Position of neck mismatched")
+
+        if action == 0:
+            # left
+            if neck_pos == self.step_absolute(0):
+                next_move = self.step_absolute(1)
+
+            elif neck_pos == self.step_absolute(1):
+                next_move = self.step_absolute(2)
+
+            elif neck_pos == self.step_absolute(2):
+                next_move = self.step_absolute(3)
+            
+            elif neck_pos == self.step_absolute(3):
+                next_move = self.step_absolute(0)
+
+            else:
+                warnings.warn("Position of neck mismatched")
+
+        if action == 2:
+            # right
+            if neck_pos == self.step_absolute(0):
+                next_move = self.step_absolute(3)
+
+            elif neck_pos == self.step_absolute(1):
+                next_move = self.step_absolute(0)
+
+            elif neck_pos == self.step_absolute(2):
+                next_move = self.step_absolute(1)
+            
+            elif neck_pos == self.step_absolute(3):
+                next_move = self.step_absolute(2)
+
+            else:
+                warnings.warn("Position of neck mismatched")
 
         '''
 
