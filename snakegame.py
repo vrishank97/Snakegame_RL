@@ -17,10 +17,10 @@ class SnakeEnv:
         self.y = y
         self.state = np.ones((x, y), dtype=int)*GROUND
         self.reward_range = (0, 1)
-        self.snake = deque([[3, 3],[3, 4],[3, 5]])
         self.score = 0
         self.done = 0
         self.screen = np.ones((x*4, y*4), dtype=int)*GROUND
+        self.timestep = 0
         self.reset()
 
     def project(self):
@@ -45,9 +45,28 @@ class SnakeEnv:
     def reset(self):
         x = self.x
         y = self.y
+        self.timestep = 0
 
         self.state = np.ones((x, y), dtype=int)*GROUND
-        self.snake = deque([[5, 4],[5, 5],[5, 6]])
+        small_snake = []
+        small_snake.append([randint(2, x - 3), randint(2, y - 3)])
+        choice = randint(1, 4)
+        
+        if choice == 1:
+            small_snake.append([small_snake[0][0] + 1, small_snake[0][1]])
+        
+        if choice == 2:
+            small_snake.append([small_snake[0][0], small_snake[0][1] + 1])
+        
+        if choice == 3:
+            small_snake.append([small_snake[0][0] - 1, small_snake[0][1]])
+
+        if choice == 4:
+            small_snake.append([small_snake[0][0], small_snake[0][1] - 1])
+
+        choice = randint(0, 1)
+
+        self.snake = deque([small_snake[choice], small_snake[abs(choice - 1)]])
         for i in self.snake:
             self.state[i[0]][i[1]] = SNAKE
         head = self.snake[0]
@@ -58,7 +77,7 @@ class SnakeEnv:
         for i in range(self.x):
             self.state[i][0] = WALL
             self.state[i][self.y - 1] = WALL
-        self.food()
+        # self.food()
         self.food()
         return self.state
 
@@ -95,57 +114,36 @@ class SnakeEnv:
         skore = len(snake)
         next_move = [0,0]
         neck_pos = snake[1]
+        self.timestep += 1
 
-        if action == 1:
+        if action == 0:
             # forward
             if neck_pos == self.step_absolute(0):
                 next_move = self.step_absolute(2)
-
-            elif neck_pos == self.step_absolute(1):
-                next_move = self.step_absolute(3)
-
-            elif neck_pos == self.step_absolute(2):
-                next_move = self.step_absolute(0)
-            
-            elif neck_pos == self.step_absolute(3):
-                next_move = self.step_absolute(1)
-
             else:
-                warnings.warn("Position of neck mismatched")
-
-        if action == 0:
-            # left
-            if neck_pos == self.step_absolute(0):
-                next_move = self.step_absolute(1)
-
-            elif neck_pos == self.step_absolute(1):
-                next_move = self.step_absolute(2)
-
-            elif neck_pos == self.step_absolute(2):
-                next_move = self.step_absolute(3)
-            
-            elif neck_pos == self.step_absolute(3):
                 next_move = self.step_absolute(0)
 
+        if action == 1:
+            # right
+            if neck_pos == self.step_absolute(1):
+                next_move = self.step_absolute(3)
             else:
-                warnings.warn("Position of neck mismatched")
+                next_move = self.step_absolute(1)
 
         if action == 2:
-            # right
-            if neck_pos == self.step_absolute(0):
-                next_move = self.step_absolute(3)
-
-            elif neck_pos == self.step_absolute(1):
+            # down
+            if neck_pos == self.step_absolute(2):
                 next_move = self.step_absolute(0)
-
-            elif neck_pos == self.step_absolute(2):
-                next_move = self.step_absolute(1)
-            
-            elif neck_pos == self.step_absolute(3):
+            else:
                 next_move = self.step_absolute(2)
 
+        if action == 3:
+            # down
+            if neck_pos == self.step_absolute(3):
+                next_move = self.step_absolute(1)
             else:
-                warnings.warn("Position of neck mismatched")
+                next_move = self.step_absolute(3)
+
 
         '''
 
@@ -199,7 +197,7 @@ class SnakeEnv:
             snake.pop()
 
         self.render()
-        self.score = (len(snake) - skore)
+        self.score = ((len(snake) - skore) * 1)
         if self.done:
             self.score = 0
         return self.state, self.score, self.done
